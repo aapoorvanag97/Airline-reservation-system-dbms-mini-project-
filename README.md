@@ -1,2 +1,157 @@
 # Airline-reservation-system-dbms-mini-project-
 database management in airline reservation system
+
+
+QUERIES
+
+CREATING TABLES
+
+• QUERY: create table passenger (pno int, pname varchar(50), gender varchar(10), dob
+varchar(50), paddress varchar(100),primary key(pno));
+Description: This query is used to create a table called passenger that has all the information
+about passengers.
+
+• QUERY: create table admin(pname varchar(50), pno int, fno int, primary key(pno, fno),
+foreign key(pno) references passenger(pno), foreign key(fno) references
+flight(fno));
+Description: This query is used to create a table called admin that has all the information about
+ticket bookings.
+
+• QUERY: create table flight (fno int, fname varchar(50), fromf varchar(50), tof varchar(50),
+dtime varchar(50), atime varchar(50), fare int, datef varchar(50), noofseats int,
+primary key(fno));
+Description: This query is used to create a table called flight that has information about all
+flights like departure city, arrival city, fare etc.
+
+• QUERY: create table payment (name varchar(50), cardno int, cvv int, pno int, fno int,
+primary key(pno, fno), foreign key(pno) references passenger(pno), foreign
+key(fno) references flight(fno);
+Description: This query is used to create a table called payment that has information about
+payment like all details related to card n the passenger who has paid the amount etc.
+
+• QUERY: create table ticketstatus (fno int, nooftickf int, primary key(fno), foreign key(fno)
+references flight(fno));
+Description: This query is used to create a table called ticketstatus that has information about
+number of seats booked in each flight.
+
+
+INSERTING VALUES INTO TABLES
+
+• QUERY: INSERT INTO passenger (pname, gender, dob, address) VALUES (‘anish’, ‘m’,
+’16-09-1988’, ‘bangalore’);
+Description: This query is used to insert into table passenger. All the values to be inserted are
+mentioned in a chronological order and are inserted into the table according to the order.
+
+• QUERY: INSERT INTO flight (fno, fname, fromf, tof, dtime, atime, fare, datef) VALUES (1,
+‘indigo’, ‘bangalore’, ‘mumbai’, ’12.30’, ’14.30’, ‘6000’, ’24-11-2018’, 30);
+Description: This query is used to insert into table flight. All the values to be inserted are
+mentioned in a chronological order and are inserted into the table according to the order.
+
+• QUERY: INSERT INTO admin (pname, fno) VALUES (‘anuja’, 1);
+Description: This query is used to insert into table flight. All the values to be inserted are
+mentioned in a chronological order and are inserted into the table according to the order.
+
+UPDATING VALUES IN TABLE
+
+• QUERY: UPDATE TABLE passenger set pname=’amruth’, paddress=’mysore’ where pno=1;
+Description: This query is used to update the table passenger. All the values to be inserted are
+mentioned in a chronological order and are updated into the table according to the order. The
+update operation is performed in accordance to the primary key which is the pno in this case.
+
+• QUERY: UPDATE TABLE admin set pname=’amruth’ where pno=1 and fno=1;
+Description: This query is used to update the table admin . All the values to be inserted are
+mentioned in a chronological order and are updated into the table according to the order. The
+update operation is performed in accordance to the primary keys which are pno and fno in this
+case.
+
+• QUERY: UPDATE TABLE ticketstatus set noogtickf=10 where fno=1;
+Description: This query is used to update the table ticketstatus. All the values to be inserted are
+mentioned in a chronological order and are updated into the table according to the order. The
+update operation is performed in accordance to the primary key which is fno in this case.
+
+DELETING VALUES IN A TABLE
+
+• QUERY: DELETE FROM passenger where pno=1;
+Description: This query is used to delete a tuple from the database using the the
+pno as the primary key.
+
+• QUERY: DELETE FROM flight where fno=1;
+Description: This query is used to delete a tuple from the database using the the fno as the
+primary key.
+
+• QUERY: DELETE FROM ticketstatus where fno=1;
+Description: This query is used to delete a tuple from the database using the the fno as the
+primary key.
+
+3.4.1 STORED PROCEDURES
+ 
+• PROCEDURE
+ create PROCEDURE procedure1(IN city1 varchar(50), IN city2 varchar(50))
+ BEGIN
+ select fno, fname, fromf, tof, dtime, atime, fare, datef, noofseats from flight where fromf=city1
+ and tof=city2;
+END
+DESCRIPTION: This stored procedure is used to retrieve data from flight where departure
+city=city1 and arrival city=city2.
+
+• PROCEDURE
+create PROCEDURE procedure2(IN a varchar(50),IN b varchar(50),
+IN c varchar(50), IN varchar(50))
+BEGIN
+insert into passenger(pname, gender, dob, paddress) values ('a','b','c','d');
+Dept. of CSE, JSSATE 19 
+AIRLINE RESERVATION SYSTEM
+END
+DESCRIPTION: This stored procedure is used to insert data such as pname, gender, dob,
+paddress as a, b, c, d into passenger table.
+
+• PROCEDURE
+ create PROCEDURE procedure3(IN a int)
+ BEGIN
+ Select pno, pname, gender, dob, address, fno, name, cardno from passenger, payment where
+pno=a ;
+ END
+DESCRIPTION: This stored procedure is used to select data such as passenger’s number, name,
+address, date of birth and payment details just to ensure that the tickets have been booked
+properly.
+
+• PROCEDURE
+create PROCEDURE procedure4( )
+BEGIN
+Select fno, fname, fromf, tof, dtime, atime, fare, datef, noofseats, nooftickf from flight,
+Ticketstatus;
+END
+DESCRIPTION: This stored procedure is used select details about all the flights and current
+status of tickets of each flight.
+
+3.4.2 TRIGGERS
+
+• TRIGGER
+ CREATE TRIGGER t1
+ after insert on admin
+ for each row
+ update ticketstatus set nooftickf=nooftickf+1
+ where ticketstatus.fno=new.fno;
+DESCRIPTION: Whenever a passenger books a flight ticket the “number of tickets” column in
+ticketstatus table must get incremented.
+
+• TRIGGER
+ CREATE TRIGGER t2
+ before insert on signup
+ for each row
+ begin
+ if length(new.password)<4
+ then set new.password=new.username;
+ end if;
+ end
+DESCRIPTION: This trigger is triggered when the password of new user has a length lesser
+than 4 then to make the password strong, the value of user’s name is set as password.
+
+• TRIGGER
+ CREATE TRIGGER t3
+ after update on passenger
+ for each row
+ update admin set pname=new.pname
+ where pno=new.pno;
+DESCRIPTION: This trigger is updated when there is updation operation being performed on
+the passenger table , it updates the values of pname in admin table.
